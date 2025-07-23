@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureVPN - Защитите свою приватность</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #1e40af, #1e3a8a);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+            }
+        }
+
+        @keyframes progressBar {
+            from {
+                width: 0%;
+            }
+            to {
+                width: var(--progress);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Навигация */
+        nav {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #6d28d9);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #1e3a8a;
+        }
+
+        /* Hero секция */
+        .hero {
+            padding: 8rem 1.5rem 5rem;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Карты серверов */
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .server-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .server-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .server-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            border-radius: 0.25rem;
+            transition: width 0.5s ease;
+            animation: progressBar 2s ease-out;
+        }
+
+        /* Секции */
+        .section {
+            padding: 5rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+        }
+
+        /* Тарифы */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.popular {
+            border: 2px solid #60a5fa;
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 1rem 0;
+        }
+
+        .features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Функции безопасности */
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .security-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .security-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .security-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+
+        /* Футер */
+        footer {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Эффекты при скролле */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span style="font-size: 2rem; color: #60a5fa;">🛡️</span>
+                <span class="orbitron" style="font-size: 1.5rem; font-weight: 700;">SecureVPN</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#pricing">Тарифы</a></li>
+                <li><a href="#servers">Серверы</a></li>
+                <li><a href="#security">Безопасность</a></li>
+                <li><a href="#support">Поддержка</a></li>
+            </ul>
+            <a href="#" class="btn btn-primary">Попробовать бесплатно</a>
+        </div>
+    </nav>
+
+    <!-- Hero секция -->
+    <section id="home" class="hero">
+        <div class="animate-fade-in">
+            <h1 class="orbitron">
+                Защитите свою <span style="color: #60a5fa;">приватность</span>
+            </h1>
+            <p>
+                Быстрый, надежный и безопасный VPN с мониторингом производительности в реальном времени. 
+                Подключайтесь к любому серверу одним кликом.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary animate-pulse">▶️ Начать сейчас</a>
+                <a href="#" class="btn btn-outline">👁️ Посмотреть демо</a>
+            </div>
+        </div>
+
+        <!-- Карты серверов -->
+        <div class="server-grid">
+            <div class="server-card animate-float" style="animation-delay: 0.2s;">
+                <div class="server-header">
+                    <div class="server-title">
+                        <span style="font-size: 2rem;">🇺🇸</span>
+                        <span>США</span>
+                    </div>
+                    <span class="badge">Онлайн</span>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Серверов:</span>
+                        <span style="font-weight: 700;">150</span>
+                    </div>
+                    <div class="progress-container">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Нагрузка:</span>
+                            <span style="font-weight: 700;" id="usa-load">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill animate-glow" id="usa-progress" style="--progress: 45%; width: 45%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="server-card animate-float" style="animation-delay: 0.4s;">
+                <div class="server-header">
+                    <div class="server-title">
+                        <span style="font-size: 2rem;">🇪🇺</span>
+                        <span>Европа</span>
+                    </div>
+                    <span class="badge">Онлайн</span>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Серверов:</span>
+                        <span style="font-weight: 700;">200</span>
+                    </div>
+                    <div class="progress-container">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Нагрузка:</span>
+                            <span style="font-weight: 700;" id="eu-load">68%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill animate-glow" id="eu-progress" style="--progress: 68%; width: 68%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="server-card animate-float" style="animation-delay: 0.6s;">
+                <div class="server-header">
+                    <div class="server-title">
+                        <span style="font-size: 2rem;">🌏</span>
+                        <span>Азия</span>
+                    </div>
+                    <span class="badge">Онлайн</span>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Серверов:</span>
+                        <span style="font-weight: 700;">100</span>
+                    </div>
+                    <div class="progress-container">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Нагрузка:</span>
+                            <span style="font-weight: 700;" id="asia-load">32%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill animate-glow" id="asia-progress" style="--progress: 32%; width: 32%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Тарифы -->
+    <section id="pricing" class="section scroll-reveal" style="background: rgba(0, 0, 0, 0.2);">
+        <div class="section-header">
+            <h2 class="section-title orbitron">Выберите свой план</h2>
+            <p class="section-subtitle">Прозрачные цены без скрытых платежей</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="orbitron" style="font-size: 1.5rem; margin-bottom: 1rem;">Базовый</h3>
+                <div class="price">₽299<span style="font-size: 1rem; color: #cbd5e1;">/месяц</span></div>
+                <ul class="features">
+                    <li>✅ 1 подключение</li>
+                    <li>✅ 50+ серверов</li>
+                    <li>✅ Базовая защита</li>
+                    <li>✅ Email поддержка</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%;">Выбрать план</a>
+            </div>
+
+            <div class="pricing-card popular">
+                <div class="popular-badge">Популярный</div>
+                <h3 class="orbitron" style="font-size: 1.5rem; margin-bottom: 1rem;">Про</h3>
+                <div class="price">₽599<span style="font-size: 1rem; color: #cbd5e1;">/месяц</span></div>
+                <ul class="features">
+                    <li>✅ 5 подключений</li>
+                    <li>✅ 200+ серверов</li>
+                    <li>✅ Продвинутая защита</li>
+                    <li>✅ 24/7 поддержка</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%;">Выбрать план</a>
+            </div>
+
+            <div class="pricing-card">
+                <h3 class="orbitron" style="font-size: 1.5rem; margin-bottom: 1rem;">Премиум</h3>
+                <div class="price">₽999<span style="font-size: 1rem; color: #cbd5e1;">/месяц</span></div>
+                <ul class="features">
+                    <li>✅ 10 подключений</li>
+                    <li>✅ 500+ серверов</li>
+                    <li>✅ Максимальная защита</li>
+                    <li>✅ Приоритетная поддержка</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%;">Выбрать план</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Безопасность -->
+    <section id="security" class="section scroll-reveal">
+        <div class="section-header">
+            <h2 class="section-title orbitron">Максимальная безопасность</h2>
+            <p class="section-subtitle">Военный уровень шифрования и защиты</p>
+        </div>
+
+        <div class="security-grid">
+            <div class="security-card">
+                <div class="security-icon">🛡️</div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">AES-256 шифрование</h3>
+                <p style="color: #cbd5e1;">Военный стандарт защиты данных</p>
+            </div>
+            <div class="security-card">
+                <div class="security-icon">🔒</div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">Kill Switch</h3>
+                <p style="color: #cbd5e1;">Автоматическое отключение при сбоях</p>
+            </div>
+            <div class="security-card">
+                <div class="security-icon">👁️</div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">No-logs политика</h3>
+                <p style="color: #cbd5e1;">Мы не храним ваши данные</p>
+            </div>
+            <div class="security-card">
+                <div class="security-icon">⚡</div>
+                <h3 style="font-weight: 700; margin-bottom: 1rem;">DNS защита</h3>
+                <p style="color: #cbd5e1;">Блокировка вредоносных сайтов</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Поддержка -->
+    <section id="support" class="section scroll-reveal" style="background: rgba(0, 0, 0, 0.2); text-align: center;">
+        <h2 class="section-title orbitron">Нужна помощь?</h2>
+        <p class="section-subtitle" style="margin-bottom: 3rem;">Наша служба поддержки работает 24/7</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="#" class="btn btn-primary">💬 Онлайн чат</a>
+            <a href="#" class="btn btn-outline">📧 Email поддержка</a>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="font-size: 1.5rem; color: #60a5fa;">🛡️</span>
+            <span class="orbitron" style="font-size: 1.25rem; font-weight: 700;">SecureVPN</span>
+        </div>
+        <p style="color: #94a3b8;">© 2024 SecureVPN. Все права защищены.</p>
+    </footer>
+
+    <script>
+        // Анимация скролла
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        }
+
+        // Обновление данных серверов
+        function updateServerStats() {
+            const servers = [
+                { id: 'usa', element: document.getElementById('usa-load'), progress: document.getElementById('usa-progress') },
+                { id: 'eu', element: document.getElementById('eu-load'), progress: document.getElementById('eu-progress') },
+                { id: 'asia', element: document.getElementById('asia-load'), progress: document.getElementById('asia-progress') }
+            ];
+
+            servers.forEach(server => {
+                const newLoad = Math.floor(Math.random() * 100);
+                server.element.textContent = newLoad + '%';
+                server.progress.style.width = newLoad + '%';
+                server.progress.style.setProperty('--progress', newLoad + '%');
+            });
+        }
+
+        // Плавная прокрутка к якорям
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Изменение навигации при скролле
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(0, 0, 0, 0.8)';
+            } else {
+                navbar.style.background = 'rgba(0, 0, 0, 0.2)';
+            }
+            
+            revealOnScroll();
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            revealOnScroll();
+            updateServerStats();
+            
+            // Обновление статистики каждые 3 секунды
+            setInterval(updateServerStats, 3000);
+        });
+    </script>
+</body>
+</html>
